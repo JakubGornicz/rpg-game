@@ -36,8 +36,9 @@ void Player::Load()
     }
 }
 
-void Player::Update(Skeleton& skeleton)
+void Player::Update(Skeleton& skeleton, sf::Clock& fireClock, float& fireRate)
 {
+	// THIS SHOULDN'T BE HERE 
     float spriteHeight = sprite.getGlobalBounds().height;
     float spriteWidth = sprite.getGlobalBounds().width;
 
@@ -78,30 +79,30 @@ void Player::Update(Skeleton& skeleton)
     }
 
     // handle shooting
-    // handle mouse
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && fireClock.getElapsedTime().asSeconds() > fireRate)
     {
+        fireClock.restart(); // reset the cooldown
+
         sf::RectangleShape newBullet(sf::Vector2f(62, 10));
+        newBullet.setPosition(sprite.getPosition());
+        newBullet.setTexture(&bulletTexture);
+
+
+        // bullet rotation to face the target
+        sf::Vector2f direction = skeleton.sprite.getPosition() - newBullet.getPosition();
+        float bulletAngle = std::atan2(direction.y, direction.x) * 180 / 3.14159265;
+        newBullet.setRotation(bulletAngle + 180.0f);
+
         bullets.push_back(newBullet);
-        int index = bullets.size() - 1;
-        bullets[index].setPosition(sf::Vector2f(sprite.getPosition()));
     }
 
     // sf::Vector2f mousepos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
     for (int i = 0; i < bullets.size(); i++)
     {
-        bullets[i].setTexture(&bulletTexture);
-        // FINISH THIS
-        // float bulletAngle = AngleBetweenVectors(skeletonSprite.getPosition(), bullets[i].getPosition());
-        // bullets[i].setRotation(bulletAngle * 180 / 3.14159265);
+		// bullet movement
         sf::Vector2f bulletTarget = skeleton.sprite.getPosition() - bullets[i].getPosition();
         bulletTarget = Math::NormalizeVector(bulletTarget);
         bullets[i].setPosition(bullets[i].getPosition() + bulletTarget * bulletSpeed);
-
-		if (bullets[i].getPosition() == skeleton.sprite.getPosition())
-		{
-			bullets.erase(bullets.begin() + i);
-		}
     }
 }
 

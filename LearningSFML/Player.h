@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Skeleton.h"
 
+
 class Player
 {
 private:
@@ -16,6 +17,6 @@ public:
 public:
 	void Initialize();
 	void Load();
-	void Update(Skeleton& skeleton);
+	void Update(Skeleton& skeleton, sf::Clock& fireClock, float& fireRate);
 	void Draw(sf::RenderWindow& window);
 };

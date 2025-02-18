@@ -4,14 +4,6 @@
 #include "Player.h"
 #include "Skeleton.h"
 
-
-static float AngleBetweenVectors(sf::Vector2f vector1, sf::Vector2f vector2)
-{
-	float dotProduct = vector1.x * vector2.x + vector1.y * vector2.y;
-	float determinant = vector1.x * vector2.y - vector1.y * vector2.x;
-	float angle = std::atan2(determinant, dotProduct);
-	return angle;
-}
 int main()
 {
 	// ------------------------------------------------------ INITIALIZATION ------------------------------------------------------
@@ -27,6 +19,10 @@ int main()
 	player.Initialize();
 	skeleton.Initialize();
 
+	// temporarily here, move to player class later
+    sf::Clock fireClock;
+    float fireRate = 0.5f; // <- minimal time between shots
+
     // ------------------------------------------------------ INITIALIZATION ------------------------------------------------------
 	// ----------------------------------------------------------- LOAD -----------------------------------------------------------
 
@@ -39,6 +35,7 @@ int main()
     while (window.isOpen())
     {
         // ----------------------------------------------------------- UPDATE -----------------------------------------------------------
+        
         // handle window events 
         sf::Event event;
         while (window.pollEvent(event))
@@ -50,8 +47,9 @@ int main()
                 window.close();
         }
 
+        // handle sprite acctivity
 		skeleton.Update();
-        player.Update(skeleton);
+        player.Update(skeleton, fireClock, fireRate);
         
         // ----------------------------------------------------------- UPDATE -----------------------------------------------------------
 
