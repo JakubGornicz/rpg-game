@@ -2,6 +2,21 @@
 #include <iostream>
 #include <vector>
 
+static sf::Vector2f NormalizeVector(sf::Vector2f& vector)
+{
+	float length = std::sqrt(vector.x * vector.x + vector.y * vector.y);
+	vector.x /= length;
+	vector.y /= length;
+
+    return vector;
+}
+float AngleBetweenVectors(sf::Vector2f vector1, sf::Vector2f vector2)
+{
+	float dotProduct = vector1.x * vector2.x + vector1.y * vector2.y;
+	float determinant = vector1.x * vector2.y - vector1.y * vector2.x;
+	float angle = std::atan2(determinant, dotProduct);
+	return angle;
+}
 int main()
 {
 #pragma region window
@@ -31,10 +46,7 @@ int main()
 	{
 		std::cout << "Background texture failed to load!" << std::endl;
 	}
-#pragma region bullets
-	sf::Texture bulletTexture;
-    std::vector<sf::Sprite> bullets;
-#pragma endregion
+
 #pragma region skeleton
     sf::Texture skeletonTexture;
     sf::Sprite skeletonSprite;
@@ -42,7 +54,7 @@ int main()
     {
         std::cout << "Enemy texture loaded!" << std::endl;
         skeletonSprite.setTexture(skeletonTexture);
-        skeletonSprite.setPosition(sf::Vector2f(200, 100));
+        skeletonSprite.setPosition(sf::Vector2f(200, 600));
 
         int xIndex = 0;
         int yIndex = 2;
@@ -65,13 +77,32 @@ int main()
         int yIndex = 0;
 		playerSprite.setTextureRect(sf::IntRect(xIndex * 64, yIndex * 64, 64, 64));
         playerSprite.scale(sf::Vector2f(3, 3));
+        playerSprite.setPosition(sf::Vector2f(1650, 800));
     }
     else
     {
 		std::cout << "Player texture failed to load!" << std::endl;
     }
 #pragma endregion
+#pragma region bullets
+    sf::Texture bulletTexture;
+    std::vector<sf::RectangleShape> bullets;
+
+	if (bulletTexture.loadFromFile("Assets/Bullets/Textures/arrow.png"))
+	{
+		std::cout << "Bullet texture loaded!" << std::endl;
+	}
+	else
+	{
+		std::cout << "Bullet texture failed to load!" << std::endl;
+	}
+
+	float bulletSpeed = 0.5f;
+
+
 #pragma endregion
+#pragma endregion
+    
 #pragma region main game loop
     while (window.isOpen())
     {
@@ -85,6 +116,7 @@ int main()
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
                 window.close();
         }
+
 
         float spriteHeight = playerSprite.getGlobalBounds().height;
         float spriteWidth = playerSprite.getGlobalBounds().width;
@@ -125,11 +157,36 @@ int main()
             }
         }
 
+        // handle mouse
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            sf::RectangleShape newBullet(sf::Vector2f(62, 10));
+            bullets.push_back(newBullet);
+			int index = bullets.size() - 1;
+            bullets[index].setPosition(sf::Vector2f(playerSprite.getPosition()));
+        }
+
+        // sf::Vector2f mousepos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+        for (int i = 0; i < bullets.size(); i++)
+        {
+            bullets[i].setTexture(&bulletTexture);
+			// FINISH THIS
+            // float bulletAngle = AngleBetweenVectors(skeletonSprite.getPosition(), bullets[i].getPosition());
+			// bullets[i].setRotation(bulletAngle * 180 / 3.14159265);
+            sf::Vector2f bulletTarget = skeletonSprite.getPosition() - bullets[i].getPosition();
+            bulletTarget = NormalizeVector(bulletTarget);
+            bullets[i].setPosition(bullets[i].getPosition() + bulletTarget * bulletSpeed);
+        }
+
         window.clear(sf::Color::Black);
 
 		window.draw(backgroundSprite);
 		window.draw(skeletonSprite);
         window.draw(playerSprite);
+        for (int i = 0; i < bullets.size(); i++)
+        {
+            window.draw(bullets[i]);
+        }
         window.display();
 
     }
