@@ -6,12 +6,13 @@
 
 int main()
 {
-	// ------------------------------------------------------ INITIALIZATION ------------------------------------------------------
+	// ------------------------- INITIALIZATION -----------------------
     unsigned int windowWidth = 1920;
     unsigned int windowHeight = 1080;
     sf::ContextSettings settings; 
     settings.antialiasingLevel = 8;
     sf::RenderWindow window(sf::VideoMode({ windowWidth, windowHeight }), "SFML shapes", sf::Style::Fullscreen, settings);
+    window.setFramerateLimit(240);
 
     Player player;
     Skeleton skeleton;
@@ -23,18 +24,23 @@ int main()
     sf::Clock fireClock;
     float fireRate = 0.5f; // <- minimal time between shots
 
-    // ------------------------------------------------------ INITIALIZATION ------------------------------------------------------
-	// ----------------------------------------------------------- LOAD -----------------------------------------------------------
+    // ------------------------- INITIALIZATION -----------------------
+	// ------------------------- LOAD -----------------------
 
     player.Load();
     skeleton.Load();
 
-    // ----------------------------------------------------------- LOAD -----------------------------------------------------------
+    // ------------------------- LOAD -----------------------
 	
+    sf::Clock clock;
 
     while (window.isOpen())
     {
-        // ----------------------------------------------------------- UPDATE -----------------------------------------------------------
+        // --------------------------- UPDATE ---------------------------
+        // DeltaTime stores time for necesarry to render 1 frame
+        sf::Time deltaTime = clock.restart();
+        float deltaTimeMs = deltaTime.asMilliseconds();
+        std::cout << deltaTimeMs << std::endl;
         
         // handle window events 
         sf::Event event;
@@ -47,18 +53,19 @@ int main()
                 window.close();
         }
 
-        // handle sprite acctivity
-		skeleton.Update();
-        player.Update(skeleton, fireClock, fireRate);
-        
-        // ----------------------------------------------------------- UPDATE -----------------------------------------------------------
 
-		// ----------------------------------------------------------- DRAW -----------------------------------------------------------
+        // handle sprite acctivity
+		skeleton.Update(deltaTimeMs);
+        player.Update(deltaTimeMs, skeleton, fireClock, fireRate);
+        
+        // --------------------------- UPDATE ---------------------------
+
+		// --------------------------- DRAW ---------------------------
         window.clear(sf::Color::Black);
 		skeleton.Draw(window);
         player.Draw(window);
         window.display();
-        // ----------------------------------------------------------- DRAW -----------------------------------------------------------
+        // --------------------------- DRAW ---------------------------
     }
 	
 

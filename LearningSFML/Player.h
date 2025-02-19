@@ -6,10 +6,16 @@
 class Player
 {
 private:
+	sf::Vector2i size;
 	sf::Texture texture;
 	sf::Texture bulletTexture;
+	float speed;
+	
 	std::vector<sf::RectangleShape> bullets;
-	float bulletSpeed = 0.5f;
+	float bulletSpeed;
+
+	sf::RectangleShape bondsRect;
+	
 
 public:
 	sf::Sprite sprite;
@@ -17,6 +23,6 @@ public:
 public:
 	void Initialize();
 	void Load();
-	void Update(Skeleton& skeleton, sf::Clock& fireClock, float& fireRate);
+	void Update(float deltaTimeMs, Skeleton& skeleton, sf::Clock& fireClock, float& fireRate);
 	void Draw(sf::RenderWindow& window);
 };

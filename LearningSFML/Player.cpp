@@ -5,6 +5,16 @@
 
 void Player::Initialize()
 {
+    size = sf::Vector2i(64, 64);
+    speed = 2.0f;
+
+    bulletSpeed = 1.5f;
+
+    bondsRect.setFillColor(sf::Color::Transparent);
+    bondsRect.setOutlineThickness(1.0f);
+    bondsRect.setOutlineColor(sf::Color::Red);
+
+
 }
 
 void Player::Load()
@@ -16,9 +26,14 @@ void Player::Load()
         sprite.setTexture(texture);
         int xIndex = 0;
         int yIndex = 0;
-        sprite.setTextureRect(sf::IntRect(xIndex * 64, yIndex * 64, 64, 64));
-        sprite.scale(sf::Vector2f(3, 3));
+        sprite.setTextureRect(sf::IntRect(xIndex * size.x, yIndex * size.y, size.x, size.y));
         sprite.setPosition(sf::Vector2f(1650, 800));
+
+        // setting scale of sprite
+        sprite.scale(sf::Vector2f(3, 3));
+
+        // resizing the bondsRect to match the sprite
+        bondsRect.setSize(sf::Vector2f(size.x * sprite.getScale().x, size.y * sprite.getScale().y));
     }
     else
     {
@@ -36,7 +51,7 @@ void Player::Load()
     }
 }
 
-void Player::Update(Skeleton& skeleton, sf::Clock& fireClock, float& fireRate)
+void Player::Update(float deltaTimeMs, Skeleton& skeleton, sf::Clock& fireClock, float& fireRate)
 {
 	// THIS SHOULDN'T BE HERE 
     float spriteHeight = sprite.getGlobalBounds().height;
@@ -44,12 +59,11 @@ void Player::Update(Skeleton& skeleton, sf::Clock& fireClock, float& fireRate)
 
     // handle user input
     sf::Vector2f currentPosition = sprite.getPosition();
-    float movementSpeed = 0.5f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
         if (currentPosition.x < 1920 - spriteWidth)
         {
-            sprite.setPosition(currentPosition + sf::Vector2f(movementSpeed, 0));
+            sprite.setPosition(currentPosition + sf::Vector2f(1, 0) * speed * deltaTimeMs);
             sprite.setTextureRect(sf::IntRect(0, 3 * 64, 64, 64));
         }
     }
@@ -57,7 +71,7 @@ void Player::Update(Skeleton& skeleton, sf::Clock& fireClock, float& fireRate)
     {
         if (currentPosition.x > 0)
         {
-            sprite.setPosition(currentPosition + sf::Vector2f(-movementSpeed, 0));
+            sprite.setPosition(currentPosition + sf::Vector2f(-1, 0) * speed * deltaTimeMs);
             sprite.setTextureRect(sf::IntRect(0, 1 * 64, 64, 64));
         }
     }
@@ -65,7 +79,7 @@ void Player::Update(Skeleton& skeleton, sf::Clock& fireClock, float& fireRate)
     {
         if (currentPosition.y > 0)
         {
-            sprite.setPosition(currentPosition + sf::Vector2f(0, -movementSpeed));
+            sprite.setPosition(currentPosition + sf::Vector2f(0, -1) * speed * deltaTimeMs);
             sprite.setTextureRect(sf::IntRect(0, 0 * 64, 64, 64));
         }
     }
@@ -73,7 +87,7 @@ void Player::Update(Skeleton& skeleton, sf::Clock& fireClock, float& fireRate)
     {
         if (currentPosition.y < 1080 - spriteHeight)
         {
-            sprite.setPosition(currentPosition + sf::Vector2f(0, movementSpeed));
+            sprite.setPosition(currentPosition + sf::Vector2f(0, 1) * speed * deltaTimeMs);
             sprite.setTextureRect(sf::IntRect(0, 2 * 64, 64, 64));
         }
     }
@@ -102,13 +116,23 @@ void Player::Update(Skeleton& skeleton, sf::Clock& fireClock, float& fireRate)
 		// bullet movement
         sf::Vector2f bulletTarget = skeleton.sprite.getPosition() - bullets[i].getPosition();
         bulletTarget = Math::NormalizeVector(bulletTarget);
-        bullets[i].setPosition(bullets[i].getPosition() + bulletTarget * bulletSpeed);
+        bullets[i].setPosition(bullets[i].getPosition() + bulletTarget * bulletSpeed * deltaTimeMs);
+    }
+
+    // Bonds rectangle movement 
+    bondsRect.setPosition(sprite.getPosition());
+
+
+    if (Math::CheckRectCollision(sprite.getGlobalBounds(), skeleton.sprite.getGlobalBounds()))
+    {
+        std::cout << "Collition detected!" << std::endl;
     }
 }
 
 void Player::Draw(sf::RenderWindow& window)
 {
     window.draw(sprite);
+    window.draw(bondsRect);
 
     for (int i = 0; i < bullets.size(); i++)
     {

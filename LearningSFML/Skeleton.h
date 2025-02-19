@@ -8,10 +8,13 @@ private:
 public:
 	sf::Sprite sprite;
 
+	sf::RectangleShape bondsRect;
+	sf::Vector2i size;
+
 public:
 	void Initialize();
 	void Load();
-	void Update();
+	void Update(float deltaTimeMs);
 	void Draw(sf::RenderWindow& window);
 };
 
