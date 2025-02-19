@@ -9,6 +9,7 @@ void Player::Initialize()
     speed = 2.0f;
 
     bulletSpeed = 1.5f;
+    fireRate = 0.5f;
 
     bondsRect.setFillColor(sf::Color::Transparent);
     bondsRect.setOutlineThickness(1.0f);
@@ -51,7 +52,7 @@ void Player::Load()
     }
 }
 
-void Player::Update(float deltaTimeMs, Skeleton& skeleton, sf::Clock& fireClock, float& fireRate)
+void Player::Update(float deltaTimeMs, Skeleton& skeleton)
 {
 	// THIS SHOULDN'T BE HERE 
     float spriteHeight = sprite.getGlobalBounds().height;
