@@ -5,17 +5,17 @@
 
 void Player::Initialize()
 {
+    // player properties
     size = sf::Vector2i(64, 64);
     speed = 2.0f;
 
-    bulletSpeed = 1.5f;
-    fireRate = 0.5f;
-
+    // bonds rectangle properties
     bondsRect.setFillColor(sf::Color::Transparent);
     bondsRect.setOutlineThickness(1.0f);
     bondsRect.setOutlineColor(sf::Color::Red);
 
-
+    // shooting properties
+    fireRate = 0.5f;
 }
 
 void Player::Load()
@@ -40,29 +40,15 @@ void Player::Load()
     {
         std::cout << "Player texture failed to load!" << std::endl;
     }
-
-	// Loading bullet texture
-    if (bulletTexture.loadFromFile("Assets/Bullets/Textures/arrow.png"))
-    {
-        std::cout << "Bullet texture loaded!" << std::endl;
-    }
-    else
-    {
-        std::cout << "Bullet texture failed to load!" << std::endl;
-    }
 }
 
-void Player::Update(float deltaTimeMs, Skeleton& skeleton)
+void Player::Update(float deltaTimeMs, Skeleton& skeleton, sf::Vector2f& mousePos)
 {
-	// THIS SHOULDN'T BE HERE 
-    float spriteHeight = sprite.getGlobalBounds().height;
-    float spriteWidth = sprite.getGlobalBounds().width;
-
     // handle user input
     sf::Vector2f currentPosition = sprite.getPosition();
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-        if (currentPosition.x < 1920 - spriteWidth)
+        if (currentPosition.x < 1920 - size.x)
         {
             sprite.setPosition(currentPosition + sf::Vector2f(1, 0) * speed * deltaTimeMs);
             sprite.setTextureRect(sf::IntRect(0, 3 * 64, 64, 64));
@@ -86,44 +72,43 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton)
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
-        if (currentPosition.y < 1080 - spriteHeight)
+        if (currentPosition.y < 1080 - size.y)
         {
             sprite.setPosition(currentPosition + sf::Vector2f(0, 1) * speed * deltaTimeMs);
             sprite.setTextureRect(sf::IntRect(0, 2 * 64, 64, 64));
         }
     }
-
-    // handle shooting
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && fireClock.getElapsedTime().asSeconds() > fireRate)
+    
+    // handle shooting on mouse click + check for cooldown
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && (fireClock.getElapsedTime().asSeconds() > fireRate))
     {
         fireClock.restart(); // reset the cooldown
 
-        sf::RectangleShape newBullet(sf::Vector2f(62, 10));
-        newBullet.setPosition(sprite.getPosition());
-        newBullet.setTexture(&bulletTexture);
-
-
-        // bullet rotation to face the target
-        sf::Vector2f direction = skeleton.sprite.getPosition() - newBullet.getPosition();
-        float bulletAngle = std::atan2(direction.y, direction.x) * 180 / 3.14159265;
-        newBullet.setRotation(bulletAngle + 180.0f);
+        Bullet newBullet;
+        newBullet.Initialize(sprite.getPosition(), mousePos, 0.5f);
 
         bullets.push_back(newBullet);
     }
 
-    // sf::Vector2f mousepos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-    for (int i = 0; i < bullets.size(); i++)
+    for (int i = bullets.size() - 1; i >= 0; i--)
     {
-		// bullet movement
-        sf::Vector2f bulletTarget = skeleton.sprite.getPosition() - bullets[i].getPosition();
-        bulletTarget = Math::NormalizeVector(bulletTarget);
-        bullets[i].setPosition(bullets[i].getPosition() + bulletTarget * bulletSpeed * deltaTimeMs);
+        bullets[i].Update(deltaTimeMs);
+
+        // bullet collision
+        if (skeleton.getHealth() > 0)
+        {
+            if (Math::CheckRectCollision(bullets[i].bulletShape.getGlobalBounds(), skeleton.sprite.getGlobalBounds()))
+            {
+                skeleton.ChangeHealth(-10);
+                bullets.erase(bullets.begin() + i);
+            }
+        }
     }
 
-    // Bonds rectangle movement 
+    // bonds rectangle movement 
     bondsRect.setPosition(sprite.getPosition());
-
-
+	
+    // bonds rectangle collision 
     if (Math::CheckRectCollision(sprite.getGlobalBounds(), skeleton.sprite.getGlobalBounds()))
     {
         std::cout << "Collition detected!" << std::endl;
@@ -133,10 +118,7 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton)
 void Player::Draw(sf::RenderWindow& window)
 {
     window.draw(sprite);
-    window.draw(bondsRect);
 
     for (int i = 0; i < bullets.size(); i++)
-    {
-        window.draw(bullets[i]);
-    }
+        bullets[i].Draw(window);
 }

@@ -1,6 +1,26 @@
 #include "Skeleton.h"
 #include <iostream>
 
+Skeleton::Skeleton() : 
+    health(100)
+{
+}
+
+Skeleton::~Skeleton()
+{
+}
+
+void Skeleton::ChangeHealth(int hp)
+{
+    health += hp;
+    healthText.setString(std::to_string(health));
+}
+
+int Skeleton::getHealth()
+{
+    return health;
+}
+
 void Skeleton::Initialize()
 {
     size = sf::Vector2i(64, 64);
@@ -13,6 +33,17 @@ void Skeleton::Initialize()
 
 void Skeleton::Load()
 {
+    if (font.loadFromFile("Assets/Fonts/arial.ttf"))
+    {
+        std::cout << "Font loaded succesfully!" << std::endl;
+        healthText.setFont(font);
+        healthText.setString(std::to_string(health));
+    }
+    else
+    {
+        std::cout << "Font failed to load." << std::endl;
+    }
+
     if (texture.loadFromFile("Assets/Skeleton/Textures/skeletonSpritesheet.png"))
     {
         std::cout << "Enemy texture loaded!" << std::endl;
@@ -36,11 +67,19 @@ void Skeleton::Load()
 
 void Skeleton::Update(float deltaTimeMs)
 {
-    bondsRect.setPosition(sprite.getPosition());
+    if (health > 0)
+    {
+        bondsRect.setPosition(sprite.getPosition());
+        healthText.setPosition(sprite.getPosition());
+    }
 }
 
 void Skeleton::Draw(sf::RenderWindow& window)
 {
-    window.draw(sprite);
-    window.draw(bondsRect);
+    if (health > 0)
+    {
+        window.draw(sprite);
+        window.draw(bondsRect);
+        window.draw(healthText);
+    }
 }

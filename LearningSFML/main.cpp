@@ -16,6 +16,28 @@ int main()
     sf::RenderWindow window(sf::VideoMode({ windowWidth, windowHeight }), "SFML shapes", sf::Style::Default, settings);
     window.setFramerateLimit(360);
 
+#pragma region background
+	// Background
+	sf::Texture backgroundTexture;
+	sf::Sprite backgroundSprite;
+    if (backgroundTexture.loadFromFile("Assets/Background/Textures/backgroundGrass.png"))
+    {
+        std::cout << "Background texture loaded succesfully!" << std::endl;
+		backgroundSprite.setTexture(backgroundTexture);
+
+        // resize background to fit window dynamically 
+        float backgroundWidth = backgroundSprite.getGlobalBounds().width;
+        float backgroundWidthScale = windowWidth / backgroundWidth;
+        float backgroundHeight = backgroundSprite.getGlobalBounds().height;
+        float backgroundHeightScale = windowHeight / backgroundHeight;
+        backgroundSprite.setScale(sf::Vector2f(backgroundWidthScale, backgroundHeightScale));
+	}
+	else
+	{
+		std::cout << "Failed to load background texture." << std::endl;
+	}
+#pragma endregion
+
     // Text
     sf::Text fpsCounter;
     sf::Font textFont;
@@ -53,15 +75,15 @@ int main()
     {
         // --------------------------- UPDATE ---------------------------
     
-        // calculating time to render a single frame
+        // compute the framerate
         sf::Time deltaTime = clock.restart();
-        float deltaTimeMs = deltaTime.asMilliseconds();
+        double deltaTimeMs = deltaTime.asMicroseconds() / 1000.0;
 
         // calculating FPS
         timer += deltaTimeMs;
-        if (timer >= 100.0f)
+        if (timer >= 100.0)
         {
-            int fps = 1000.0f / deltaTimeMs;
+            int fps = 1000.0 / deltaTimeMs;
             std::string fpsText = "FPS: " + std::to_string(fps);
             fpsCounter.setString(fpsText);
             timer = 0;
@@ -78,16 +100,19 @@ int main()
                 window.close();
         }
 
+        // mouse position
+        sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
         // handle sprite acctivity
 		skeleton.Update(deltaTimeMs);
-        player.Update(deltaTimeMs, skeleton);
+        player.Update(deltaTimeMs, skeleton, mousePos);
         
         // --------------------------- UPDATE ---------------------------
 
 
 		// --------------------------- DRAW ---------------------------
         window.clear(sf::Color::Black);
+		window.draw(backgroundSprite);
 		skeleton.Draw(window);
         player.Draw(window);
         window.draw(fpsCounter);
