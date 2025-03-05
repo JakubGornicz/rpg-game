@@ -21,7 +21,12 @@ sf::Vector2f Bullet::GetPosition()
     return position;
 }
 
-void Bullet::Initialize(const sf::Vector2f& position, sf::Vector2f& target, float speed)
+sf::RectangleShape Bullet::GetShape()
+{
+    return bulletShape;
+}
+
+void Bullet::Initialize(const sf::Vector2f& position, const sf::Vector2f& target, float speed)
 {
     this->bulletSpeed = speed;
     bulletShape.setSize(sf::Vector2f(bulletSize.x, bulletSize.y));
@@ -35,10 +40,12 @@ void Bullet::Initialize(const sf::Vector2f& position, sf::Vector2f& target, floa
 
 void Bullet::Load()
 {
-    // IMPLEMENT IT! 
+    // IMPLEMENT IT!
     // if (bulletTexture.loadFromFile("Assets/Bullets/Textures/arrow.png"))
     // {
     //     std::cout << "Bullet texture loaded!" << std::endl;
+    //     bulletShape.setTexture(&bulletTexture);
+    // 
     // }
     // else
     // {

@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+#include "Map.h"
 #include "Player.h"
 #include "Skeleton.h"
 
@@ -16,28 +17,6 @@ int main()
     sf::RenderWindow window(sf::VideoMode({ windowWidth, windowHeight }), "SFML shapes", sf::Style::Default, settings);
     window.setFramerateLimit(360);
 
-#pragma region background
-	// Background
-	sf::Texture backgroundTexture;
-	sf::Sprite backgroundSprite;
-    if (backgroundTexture.loadFromFile("Assets/Background/Textures/backgroundGrass.png"))
-    {
-        std::cout << "Background texture loaded succesfully!" << std::endl;
-		backgroundSprite.setTexture(backgroundTexture);
-
-        // resize background to fit window dynamically 
-        float backgroundWidth = backgroundSprite.getGlobalBounds().width;
-        float backgroundWidthScale = windowWidth / backgroundWidth;
-        float backgroundHeight = backgroundSprite.getGlobalBounds().height;
-        float backgroundHeightScale = windowHeight / backgroundHeight;
-        backgroundSprite.setScale(sf::Vector2f(backgroundWidthScale, backgroundHeightScale));
-	}
-	else
-	{
-		std::cout << "Failed to load background texture." << std::endl;
-	}
-#pragma endregion
-
     // Text
     sf::Text fpsCounter;
     sf::Font textFont;
@@ -46,9 +25,12 @@ int main()
     // Entities
     Player player;
     Skeleton skeleton;
+    Map map;
 
+    map.Initialize();
 	player.Initialize();
 	skeleton.Initialize();
+
 
     // ------------------------- INITIALIZATION -----------------------
 	// ------------------------- LOAD -----------------------
@@ -65,6 +47,7 @@ int main()
     }
 
     // Loading Entities
+    map.Load();
     player.Load();
     skeleton.Load();
 
@@ -104,6 +87,7 @@ int main()
         sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
         // handle sprite acctivity
+        map.Update(deltaTimeMs);
 		skeleton.Update(deltaTimeMs);
         player.Update(deltaTimeMs, skeleton, mousePos);
         
@@ -112,7 +96,7 @@ int main()
 
 		// --------------------------- DRAW ---------------------------
         window.clear(sf::Color::Black);
-		window.draw(backgroundSprite);
+        map.Draw(window);
 		skeleton.Draw(window);
         player.Draw(window);
         window.draw(fpsCounter);

@@ -86,6 +86,7 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton, sf::Vector2f& mousePo
 
         Bullet newBullet;
         newBullet.Initialize(sprite.getPosition(), mousePos, 0.5f);
+        //newBullet.Load();
 
         bullets.push_back(newBullet);
     }
@@ -97,7 +98,8 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton, sf::Vector2f& mousePo
         // bullet collision
         if (skeleton.getHealth() > 0)
         {
-            if (Math::CheckRectCollision(bullets[i].bulletShape.getGlobalBounds(), skeleton.sprite.getGlobalBounds()))
+
+            if (Math::CheckRectCollision(bullets[i].GetGlobalBounds(), skeleton.sprite.getGlobalBounds()))
             {
                 skeleton.ChangeHealth(-10);
                 bullets.erase(bullets.begin() + i);
