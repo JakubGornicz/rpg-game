@@ -70,10 +70,10 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton, const sf::Vector2f& m
     sf::Vector2f currentPosition = sprite.getPosition();
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-        if (currentPosition.x + size.x * 3 < windowWidth)
+        if (currentPosition.x + size.x * sprite.getScale().x < windowWidth)
         {
             sprite.setPosition(currentPosition + sf::Vector2f(1, 0) * speed * deltaTimeMs);
-            sprite.setTextureRect(sf::IntRect(0, 3 * 64, 64, 64));
+            sprite.setTextureRect(sf::IntRect(0, 3 * 64, size.x, size.y));
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
@@ -81,7 +81,7 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton, const sf::Vector2f& m
         if (currentPosition.x > 0)
         {
             sprite.setPosition(currentPosition + sf::Vector2f(-1, 0) * speed * deltaTimeMs);
-            sprite.setTextureRect(sf::IntRect(0, 1 * 64, 64, 64));
+            sprite.setTextureRect(sf::IntRect(0, 1 * 64, size.x, size.y));
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
@@ -89,15 +89,15 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton, const sf::Vector2f& m
         if (currentPosition.y > 0)
         {
             sprite.setPosition(currentPosition + sf::Vector2f(0, -1) * speed * deltaTimeMs);
-            sprite.setTextureRect(sf::IntRect(0, 0 * 64, 64, 64));
+            sprite.setTextureRect(sf::IntRect(0, 0 * 64, size.x, size.y));
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
-        if (currentPosition.y + size.y * 3 < windowHeight)
+        if (currentPosition.y + size.y * sprite.getScale().y < windowHeight)
         {
             sprite.setPosition(currentPosition + sf::Vector2f(0, 1) * speed * deltaTimeMs);
-            sprite.setTextureRect(sf::IntRect(0, 2 * 64, 64, 64));
+            sprite.setTextureRect(sf::IntRect(0, 2 * 64, size.x, size.y));
         }
     }
     
@@ -125,12 +125,15 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton, const sf::Vector2f& m
             {
                 skeleton.ChangeHealth(-10);
                 if (!bullets.empty())
+                {
                     bullets.erase(bullets.begin() + i);
+                    continue;
+                }
             }
-            if (bullets[i].IsOutOfBounds(windowWidth, windowHeight))
-            {
-                bullets.erase(bullets.begin() + i);
-            }
+        }
+        if (i < bullets.size() && bullets[i].IsOutOfBounds(windowWidth, windowHeight))
+        {
+            bullets.erase(bullets.begin() + i);
         }
     }
 

@@ -52,17 +52,7 @@ void Bullet::Initialize(const sf::Vector2f& position, const sf::Vector2f& target
 
 void Bullet::Load()
 {
-    // IMPLEMENT IT!
-    // if (bulletTexture.loadFromFile("Assets/Bullets/Textures/arrow.png"))
-    // {
-    //     std::cout << "Bullet texture loaded!" << std::endl;
-    //     bulletShape.setTexture(&bulletTexture);
-    // 
-    // }
-    // else
-    // {
-    //     std::cout << "Bullet texture failed to load!" << std::endl;
-    // }
+
 }
 
 void Bullet::Update(float deltaTimeMs)

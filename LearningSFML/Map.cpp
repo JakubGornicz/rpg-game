@@ -2,12 +2,15 @@
 #include <iostream>
 
 Map::Map() :
-    tileWidth(16), tileHeight(16), tilesNumX(0), tilesNumY(0), totalTiles(0)
+    tileWidth(16), tileHeight(16), tilesNumX(0), tilesNumY(0), totalTiles(0),
+	mapWidth(3), mapHeight(3), tiles(nullptr)
 {
+    tiles = nullptr; // Initialize tiles to nullptr
 }
 
 Map::~Map()
 {
+    delete[] tiles; // Clean up allocated memory
 }
 
 void Map::Initialize()
@@ -41,11 +44,11 @@ void Map::Load()
         std::cout << "Prison tilesheet failed to load!" << std::endl;
     }
 
-    for (size_t y = 0; y < 3; y++)
+    for (size_t y = 0; y < mapHeight; y++)
     {
-        for (size_t x = 0; x < 3; x++)
+        for (size_t x = 0; x < mapWidth; x++)
         {
-            int i = x + y * 3;
+            int i = x + y * mapWidth;
 
             int index = mapIndexes[i];
             mapSprites[i].setTexture(tileSheetTexture);
@@ -57,8 +60,8 @@ void Map::Load()
                 tileHeight));
 
             mapSprites[i].setScale(sf::Vector2f(5, 5));
-            mapSprites[i].setPosition(sf::Vector2f(x * tileWidth * 5,y * tileHeight * 5));
-           
+            mapSprites[i].setPosition(sf::Vector2f(x * tileWidth * mapSprites[i].getScale().x , 
+                                                   y * tileHeight * mapSprites[i].getScale().y));
         }
     }
 }
@@ -69,7 +72,7 @@ void Map::Update(float deltaTimeMs)
 
 void Map::Draw(sf::RenderWindow& window)
 {
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < mapSize; i++)
     {
         window.draw(mapSprites[i]);
     }

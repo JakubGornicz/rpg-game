@@ -15,14 +15,18 @@ private:
 
 	int tileWidth;
 	int tileHeight;
-	
-	int mapIndexes[9] = {
+
+	static const int mapSize = 9;
+	int mapWidth;
+	int mapHeight;
+
+	int mapIndexes[mapSize] = {
 		0, 1, 2,
 		3, 4, 5,
 		6, 7, 8
 	};
 
-	sf::Sprite mapSprites[9];
+	sf::Sprite mapSprites[mapSize];
 
 	
 public:
@@ -33,4 +37,3 @@ public:
 	void Update(float deltaTimeMs);
 	void Draw(sf::RenderWindow& window);
 };
-
