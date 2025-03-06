@@ -9,23 +9,27 @@ private:
 	// player
 	sf::Vector2i size;
 	sf::Texture texture;
+	sf::RectangleShape bondsRect;
 	float speed;
 	
 	// bullets 
 	sf::Vector2f mousePos;
 	std::vector<Bullet> bullets;
+	sf::Texture bulletTexture;
 	sf::Clock fireClock;
 	float fireRate;
 
-	// boundary rect
-	sf::RectangleShape bondsRect;
+	int windowWidth;
+	int windowHeight;
 
 public:
 	sf::Sprite sprite;
 
 public:
-	void Initialize();
+	Player();
+	~Player();
+	void Initialize(const unsigned int& windowWidth, const unsigned int& windowHeight);
 	void Load();
-	void Update(float deltaTimeMs, Skeleton& skeleton, sf::Vector2f& mousePos);
+	void Update(float deltaTimeMs, Skeleton& skeleton, const sf::Vector2f& mousePos);
 	void Draw(sf::RenderWindow& window);
 };

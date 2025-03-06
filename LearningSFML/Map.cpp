@@ -2,7 +2,7 @@
 #include <iostream>
 
 Map::Map() :
-    tileWidth(16), tileHeight(16), tileCols(0), tileRows(0)
+    tileWidth(16), tileHeight(16), tilesNumX(0), tilesNumY(0), totalTiles(0)
 {
 }
 
@@ -18,24 +18,48 @@ void Map::Load()
 {
     if (tileSheetTexture.loadFromFile("Assets/World/Prison/tilesheet.png"))
     {
-        tileCols = tileSheetTexture.getSize().x / tileWidth;
-        tileRows = tileSheetTexture.getSize().y / tileHeight;
-        std::cout << "Prison tilesheet texture loaded!" << std::endl;
+        tilesNumX = tileSheetTexture.getSize().x / tileWidth;
+        tilesNumY = tileSheetTexture.getSize().y / tileHeight;
 
-        int xIndex = 0;
-        int yIndex = 2;
-        for (int i = 0; i < 10; i++)
+		totalTiles = tilesNumX * tilesNumY;
+
+		tiles = new Tile[totalTiles];
+
+        for (size_t y = 0; y < tilesNumY; y++)
         {
-            sprites[i].setTexture(tileSheetTexture);
-            sprites[i].setTextureRect(sf::IntRect(i * tileWidth, yIndex * tileHeight, tileWidth, tileHeight));
-            sprites[i].setScale(5.0f, 5.0f);
-            sprites[i].setPosition(sf::Vector2f(100 + i * 5 * tileWidth, 100));
-        }
+            for (size_t x = 0; x < tilesNumX; x++)
+            {
+				int i = x + y * tilesNumX;
 
+				tiles[i].id = i;
+				tiles[i].position = sf::Vector2i(x * tileWidth, y * tileHeight);
+            }
+        }
     }
     else
     {
         std::cout << "Prison tilesheet failed to load!" << std::endl;
+    }
+
+    for (size_t y = 0; y < 3; y++)
+    {
+        for (size_t x = 0; x < 3; x++)
+        {
+            int i = x + y * 3;
+
+            int index = mapIndexes[i];
+            mapSprites[i].setTexture(tileSheetTexture);
+
+            mapSprites[i].setTextureRect(sf::IntRect(
+                tiles[index].position.x,
+                tiles[index].position.y,
+                tileWidth,
+                tileHeight));
+
+            mapSprites[i].setScale(sf::Vector2f(5, 5));
+            mapSprites[i].setPosition(sf::Vector2f(x * tileWidth * 5,y * tileHeight * 5));
+           
+        }
     }
 }
 
@@ -45,8 +69,8 @@ void Map::Update(float deltaTimeMs)
 
 void Map::Draw(sf::RenderWindow& window)
 {
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 9; i++)
     {
-        window.draw(sprites[i]);
+        window.draw(mapSprites[i]);
     }
 }

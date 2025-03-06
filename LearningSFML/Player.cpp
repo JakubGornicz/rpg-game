@@ -3,11 +3,23 @@
 #include "Math.h"
 #include <iostream>
 
-void Player::Initialize()
+Player::Player() : 
+	speed(0), fireRate(0), windowWidth(0), windowHeight(0)
 {
+}
+
+Player::~Player()
+{
+}
+
+void Player::Initialize(const unsigned int& windowWidth, const unsigned int& windowHeight)
+{
+	this->windowWidth = windowWidth;
+	this->windowHeight = windowHeight;
+
     // player properties
     size = sf::Vector2i(64, 64);
-    speed = 2.0f;
+    speed = 1.0f;
 
     // bonds rectangle properties
     bondsRect.setFillColor(sf::Color::Transparent);
@@ -15,7 +27,7 @@ void Player::Initialize()
     bondsRect.setOutlineColor(sf::Color::Red);
 
     // shooting properties
-    fireRate = 0.5f;
+    fireRate = 0.3f;
 }
 
 void Player::Load()
@@ -40,15 +52,25 @@ void Player::Load()
     {
         std::cout << "Player texture failed to load!" << std::endl;
     }
+    
+    // Loading bullet texture
+    if (bulletTexture.loadFromFile("Assets/Bullets/Textures/arrow.png"))
+    {
+        std::cout << "Bullet texture loaded!" << std::endl;
+    }
+    else
+    {
+        std::cout << "Bullet texture failed to load!" << std::endl;
+    }
 }
 
-void Player::Update(float deltaTimeMs, Skeleton& skeleton, sf::Vector2f& mousePos)
+void Player::Update(float deltaTimeMs, Skeleton& skeleton, const sf::Vector2f& mousePos)
 {
     // handle user input
     sf::Vector2f currentPosition = sprite.getPosition();
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-        if (currentPosition.x < 1920 - size.x)
+        if (currentPosition.x + size.x * 3 < windowWidth)
         {
             sprite.setPosition(currentPosition + sf::Vector2f(1, 0) * speed * deltaTimeMs);
             sprite.setTextureRect(sf::IntRect(0, 3 * 64, 64, 64));
@@ -72,7 +94,7 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton, sf::Vector2f& mousePo
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
-        if (currentPosition.y < 1080 - size.y)
+        if (currentPosition.y + size.y * 3 < windowHeight)
         {
             sprite.setPosition(currentPosition + sf::Vector2f(0, 1) * speed * deltaTimeMs);
             sprite.setTextureRect(sf::IntRect(0, 2 * 64, 64, 64));
@@ -86,7 +108,7 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton, sf::Vector2f& mousePo
 
         Bullet newBullet;
         newBullet.Initialize(sprite.getPosition(), mousePos, 0.5f);
-        //newBullet.Load();
+        newBullet.SetTexture(&bulletTexture);
 
         bullets.push_back(newBullet);
     }
@@ -96,12 +118,17 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton, sf::Vector2f& mousePo
         bullets[i].Update(deltaTimeMs);
 
         // bullet collision
-        if (skeleton.getHealth() > 0)
+        if (skeleton.getHealth() > 0 && i < bullets.size())
         {
 
             if (Math::CheckRectCollision(bullets[i].GetGlobalBounds(), skeleton.sprite.getGlobalBounds()))
             {
                 skeleton.ChangeHealth(-10);
+                if (!bullets.empty())
+                    bullets.erase(bullets.begin() + i);
+            }
+            if (bullets[i].IsOutOfBounds(windowWidth, windowHeight))
+            {
                 bullets.erase(bullets.begin() + i);
             }
         }
@@ -115,6 +142,9 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton, sf::Vector2f& mousePo
     {
         std::cout << "Collition detected!" << std::endl;
     }
+
+	// out of bonds collision
+
 }
 
 void Player::Draw(sf::RenderWindow& window)

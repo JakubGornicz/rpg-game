@@ -1,15 +1,30 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Tile.h"
+
 class Map
 {
 private:
 	sf::Texture tileSheetTexture;
-	sf::Sprite sprites[10];
+
+	Tile* tiles;
+
+	int tilesNumX;
+	int tilesNumY;
+	int totalTiles;
+
 	int tileWidth;
 	int tileHeight;
+	
+	int mapIndexes[9] = {
+		0, 1, 2,
+		3, 4, 5,
+		6, 7, 8
+	};
 
-	int tileRows;
-	int tileCols;
+	sf::Sprite mapSprites[9];
+
+	
 public:
 	Map();
 	~Map();

@@ -3,7 +3,7 @@
 #include <iostream>
 
 Bullet::Bullet() : 
-    bulletSize(sf::Vector2i(62, 10)), bulletSpeed(0)
+	bulletSize(sf::Vector2i(62, 10)), bulletSpeed(0), bulletTexture(nullptr)
 {
 }
 
@@ -21,9 +21,21 @@ sf::Vector2f Bullet::GetPosition()
     return position;
 }
 
-sf::RectangleShape Bullet::GetShape()
+sf::RectangleShape& Bullet::GetShape()
 {
     return bulletShape;
+}
+
+bool Bullet::IsOutOfBounds(unsigned int windowWidth, unsigned int windowHeight)
+{
+    sf::Vector2f pos = bulletShape.getPosition();
+    return pos.x < 0 || pos.x > windowWidth || pos.y < 0 || pos.y > windowHeight;
+}
+
+void Bullet::SetTexture(sf::Texture* texture)
+{
+	bulletTexture = texture;
+	bulletShape.setTexture(bulletTexture);
 }
 
 void Bullet::Initialize(const sf::Vector2f& position, const sf::Vector2f& target, float speed)

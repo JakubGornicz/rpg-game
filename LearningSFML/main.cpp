@@ -7,33 +7,27 @@
 
 int main()
 {
-	// ------------------------- INITIALIZATION -----------------------
-
-    // Window
-    unsigned int windowWidth = 1920;
-    unsigned int windowHeight = 1080;
+    // Creating the window
+    const unsigned int windowWidth = 1920;
+    const unsigned int windowHeight = 1080;
     sf::ContextSettings settings; 
     settings.antialiasingLevel = 8;
-    sf::RenderWindow window(sf::VideoMode({ windowWidth, windowHeight }), "SFML shapes", sf::Style::Default, settings);
+    sf::RenderWindow window(sf::VideoMode({ windowWidth, windowHeight }), "SFML shapes", sf::Style::Fullscreen, settings);
     window.setFramerateLimit(360);
 
-    // Text
+    // Creating Text
     sf::Text fpsCounter;
     sf::Font textFont;
-    float timer = 0;
 
-    // Entities
+	// Creating Game Objects
     Player player;
     Skeleton skeleton;
     Map map;
 
+	// INICJAIZLIZING GAME OBJECTS
     map.Initialize();
-	player.Initialize();
+	player.Initialize(windowWidth, windowHeight);
 	skeleton.Initialize();
-
-
-    // ------------------------- INITIALIZATION -----------------------
-	// ------------------------- LOAD -----------------------
 
     // Loading Text Font
     if (textFont.loadFromFile("Assets/Fonts/arial.ttf"))
@@ -46,30 +40,25 @@ int main()
         std::cout << "Font failed to load." << std::endl;
     }
 
-    // Loading Entities
+    // LOADING GAME OBJECTS
     map.Load();
     player.Load();
     skeleton.Load();
 
-    // ------------------------- LOAD -----------------------
-	
+	// MAIN GAME LOOP
     sf::Clock clock;
+	sf::Clock fpsClock;
     while (window.isOpen())
     {
-        // --------------------------- UPDATE ---------------------------
-    
         // compute the framerate
         sf::Time deltaTime = clock.restart();
-        double deltaTimeMs = deltaTime.asMicroseconds() / 1000.0;
+        float deltaTimeMs = deltaTime.asMicroseconds() / 1000.0f;
 
-        // calculating FPS
-        timer += deltaTimeMs;
-        if (timer >= 100.0)
+        if (fpsClock.getElapsedTime().asSeconds() >= 1.0f)
         {
-            int fps = 1000.0 / deltaTimeMs;
-            std::string fpsText = "FPS: " + std::to_string(fps);
-            fpsCounter.setString(fpsText);
-            timer = 0;
+            int fps =  (1000.0f / deltaTimeMs);
+            fpsCounter.setString("FPS: " + std::to_string(fps));
+			fpsClock.restart();
         }
         
         // handle window events 
@@ -86,24 +75,18 @@ int main()
         // mouse position
         sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
-        // handle sprite acctivity
+		// UPDATING GAME OBJECTS
         map.Update(deltaTimeMs);
 		skeleton.Update(deltaTimeMs);
         player.Update(deltaTimeMs, skeleton, mousePos);
         
-        // --------------------------- UPDATE ---------------------------
-
-
-		// --------------------------- DRAW ---------------------------
-        window.clear(sf::Color::Black);
+		// DRAWING GAME OBJECTS
+        window.clear(sf::Color::Red);
         map.Draw(window);
 		skeleton.Draw(window);
         player.Draw(window);
         window.draw(fpsCounter);
         window.display();
-        // --------------------------- DRAW ---------------------------
     }
-	
-
     return 0;
 }
