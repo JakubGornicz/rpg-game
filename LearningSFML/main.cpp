@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <fstream>
 
 #include "Map.h"
 #include "Player.h"
@@ -12,7 +13,7 @@ int main()
     const unsigned int windowHeight = 1080;
     sf::ContextSettings settings; 
     settings.antialiasingLevel = 8;
-    sf::RenderWindow window(sf::VideoMode({ windowWidth, windowHeight }), "SFML shapes", sf::Style::Fullscreen, settings);
+    sf::RenderWindow window(sf::VideoMode({ windowWidth, windowHeight }), "SFML shapes", sf::Style::Default, settings);
     window.setFramerateLimit(360);
 
     // Creating Text

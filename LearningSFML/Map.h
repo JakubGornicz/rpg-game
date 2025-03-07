@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Tile.h"
+#include "MapLoader.h"
+#include "MapData.h"
 
 class Map
 {
@@ -9,24 +11,14 @@ private:
 
 	Tile* tiles;
 
+	MapLoader mapLoader;
+	MapData md;
+
 	int tilesNumX;
 	int tilesNumY;
 	int totalTiles;
 
-	int tileWidth;
-	int tileHeight;
-
-	static const int mapSize = 9;
-	int mapWidth;
-	int mapHeight;
-
-	int mapIndexes[mapSize] = {
-		0, 1, 2,
-		3, 4, 5,
-		6, 7, 8
-	};
-
-	sf::Sprite mapSprites[mapSize];
+	sf::Sprite* mapSprites;
 
 	
 public:

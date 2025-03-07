@@ -1,0 +1,11 @@
+[Map]
+tilesheet=Assets/World/Prison/tilesheet.png
+name=Level 1
+map-width=3
+map-height=3
+tile-width=16
+tile-height=16
+scale-x=5
+scale-y=5
+data-size=9
+data=220,221,222,244,245,246,268,269,270
