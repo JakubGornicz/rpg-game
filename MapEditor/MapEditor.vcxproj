@@ -21,36 +21,36 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{7a246e22-ea0c-4154-9d4a-f5513d3994ca}</ProjectGuid>
-    <RootNamespace>LearningSFML</RootNamespace>
+    <ProjectGuid>{226b2772-3e00-4ba7-a9d7-6578199a8bb7}</ProjectGuid>
+    <RootNamespace>MapEditor</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -70,31 +70,35 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)dependencies\SFML\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\bin</OutDir>
-    <IntDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\Intermediate</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)dependencies\SFML\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\bin</OutDir>
-    <IntDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\Intermediate</IntDir>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\bin</OutDir>
-    <IntDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\Intermediate</IntDir>
+    <OutDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\Intermediate\</IntDir>
+    <IncludePath>$(SolutionDir)dependencies\SFML\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\bin</OutDir>
-    <IntDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\Intermediate</IntDir>
+    <OutDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\Intermediate\</IntDir>
+    <IncludePath>$(SolutionDir)dependencies\SFML\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\Intermediate\</IntDir>
+    <IncludePath>$(SolutionDir)dependencies\SFML\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(MSBuildProjectName)\$(Platform)\$(Configuration)\Intermediate\</IntDir>
+    <IncludePath>$(SolutionDir)dependencies\SFML\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)dependencies\SFML\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC;SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -108,7 +112,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC;SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -122,9 +126,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC;SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -138,9 +141,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;SFML_STATIC;%(PreprocessorDefinitions);SFML_STATIC;SFML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,23 +153,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Map.cpp" />
-    <ClCompile Include="MapLoader.cpp" />
-    <ClCompile Include="Math.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Skeleton.cpp" />
+    <ClCompile Include="TileOnMouse.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bullet.h" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="MapData.h" />
-    <ClInclude Include="MapLoader.h" />
-    <ClInclude Include="Math.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="Skeleton.h" />
-    <ClInclude Include="Tile.h" />
+    <ClInclude Include="Grid.h" />
+    <ClInclude Include="TileOnMouse.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

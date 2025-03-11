@@ -106,19 +106,12 @@ void MapLoader::Load(const std::string& fileName, MapData& mapData)
 						// while (getline(ss, token, ',')) {
 						// 	mapData.data[i] = std::stoi(token);
 						// }
-						int n = 0;
-						int start = 0;
-						int i = 0;
-						while (value[n] != '\0')
+						std::stringstream ss(value);
+						std::string token;
+						int index = 0;
+						while (getline(ss, token, ',')) // Read until ','
 						{
-							if (value[n] == ',' || value[n + 1] == '\0') // Risk of out-of-bounds access
-							{
-								int number = std::stoi(value.substr(start, n)); // Incorrect substring extraction
-								start = n + 1;
-								mapData.data[i] = number;
-								i++;
-							}
-							n++;
+							mapData.data[index++] = std::stoi(token); // Convert to integer and store
 						}
 					}
 				}

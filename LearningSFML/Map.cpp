@@ -8,7 +8,9 @@ Map::Map() :
 
 Map::~Map()
 {
-    delete[] tiles; // Clean up allocated memory
+    // Clean up allocated memory
+    delete[] mapSprites;
+    delete[] tiles; 
 }
 
 void Map::Initialize()
@@ -45,9 +47,9 @@ void Map::Load()
         std::cout << "Prison tilesheet failed to load!" << std::endl;
     }
 
-    for (size_t y = 0; y < md.mapWidth; y++)
+    for (size_t y = 0; y < md.mapHeight; y++)
     {
-        for (size_t x = 0; x < md.mapHeight; x++)
+        for (size_t x = 0; x < md.mapWidth; x++)
         {
             int i = x + y * md.mapWidth;
 
