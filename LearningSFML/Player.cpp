@@ -4,7 +4,7 @@
 #include <iostream>
 
 Player::Player() : 
-	speed(0), fireRate(0), windowWidth(0), windowHeight(0)
+	speed(0), fireRate(0), windowWidth(0), windowHeight(0), textureIndexX(0), textureIndexY(0)
 {
 }
 
@@ -19,7 +19,7 @@ void Player::Initialize(const unsigned int& windowWidth, const unsigned int& win
 
     // player properties
     size = sf::Vector2i(64, 64);
-    speed = 1.0f;
+    speed = 0.7f;
 
     // bonds rectangle properties
     bondsRect.setFillColor(sf::Color::Transparent);
@@ -66,6 +66,13 @@ void Player::Load()
 
 void Player::Update(float deltaTimeMs, Skeleton& skeleton, const sf::Vector2f& mousePos)
 {
+	int aniamtionOffsetX = 100;
+	int aniamtionOffsetY = 70;
+
+    int numberOfFrames = 9;
+    textureIndexX = (int)sprite.getPosition().x / aniamtionOffsetX % numberOfFrames;
+	textureIndexY = (int)sprite.getPosition().y / aniamtionOffsetY % numberOfFrames;
+
     // handle user input
     sf::Vector2f currentPosition = sprite.getPosition();
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
@@ -73,7 +80,7 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton, const sf::Vector2f& m
         if (currentPosition.x + size.x * sprite.getScale().x < windowWidth)
         {
             sprite.setPosition(currentPosition + sf::Vector2f(1, 0) * speed * deltaTimeMs);
-            sprite.setTextureRect(sf::IntRect(0, 3 * 64, size.x, size.y));
+            sprite.setTextureRect(sf::IntRect(textureIndexX * size.x, 3 * size.x, size.x, size.y));
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
@@ -81,7 +88,7 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton, const sf::Vector2f& m
         if (currentPosition.x > 0)
         {
             sprite.setPosition(currentPosition + sf::Vector2f(-1, 0) * speed * deltaTimeMs);
-            sprite.setTextureRect(sf::IntRect(0, 1 * 64, size.x, size.y));
+            sprite.setTextureRect(sf::IntRect(textureIndexX * size.x, 1 * size.x, size.x, size.y));
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
@@ -89,7 +96,7 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton, const sf::Vector2f& m
         if (currentPosition.y > 0)
         {
             sprite.setPosition(currentPosition + sf::Vector2f(0, -1) * speed * deltaTimeMs);
-            sprite.setTextureRect(sf::IntRect(0, 0 * 64, size.x, size.y));
+            sprite.setTextureRect(sf::IntRect(textureIndexY * size.x, 0 * size.x, size.x, size.y));
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
@@ -97,7 +104,7 @@ void Player::Update(float deltaTimeMs, Skeleton& skeleton, const sf::Vector2f& m
         if (currentPosition.y + size.y * sprite.getScale().y < windowHeight)
         {
             sprite.setPosition(currentPosition + sf::Vector2f(0, 1) * speed * deltaTimeMs);
-            sprite.setTextureRect(sf::IntRect(0, 2 * 64, size.x, size.y));
+            sprite.setTextureRect(sf::IntRect(textureIndexY * size.x, 2 * size.x, size.x, size.y));
         }
     }
     

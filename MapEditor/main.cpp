@@ -4,6 +4,7 @@
 
 #include "Grid.h"
 #include "TileOnMouse.h"
+#include "Map.h"
 
 int main()
 {
@@ -16,18 +17,22 @@ int main()
     window.setFramerateLimit(360);
 
     // Creating Map Editor Objects
-    Grid grid(sf::Vector2i(6, 3), // (x, y) cell number 
+    Grid grid(sf::Vector2i(10, 5), // (x, y) cell number 
               sf::Vector2i(16, 16), // (x, y) cell size 
-              sf::Vector2i(10, 10), // (x, y) scale 
-              sf::Vector2f(0, 0), // (x, y) position
+              sf::Vector2i(5, 5), // (x, y) scale 
+              sf::Vector2f(0, 0), // (x, y) position offset
               sf::Color(255, 255, 255, 128), // grid color
               2 // line thickness
              );
 
-    TileOnMouse tileOnMouse(sf::Vector2i(16, 16), sf::Vector2f(10, 10), sf::Vector2f(100, 100));
+    TileOnMouse tileOnMouse(sf::Vector2i(16, 16), // size
+                            sf::Vector2f(5, 5), // scale 
+                            sf::Vector2f(0, 0)); // position offset 
+    Map map(tileOnMouse);
 
     sf::Text fpsCounter;
     sf::Font textFont;
+    
 
     // Loading Text Font
     if (textFont.loadFromFile("Assets/Fonts/arial.ttf"))
@@ -42,10 +47,12 @@ int main()
     // INITIALISING 
     grid.Initialize();
     tileOnMouse.Initialize();
+    map.Initialize();
 
 
     grid.Load();
     tileOnMouse.Load();
+    map.Load();
 
     // MAIN GAME LOOP
     sf::Clock clock;
@@ -78,11 +85,13 @@ int main()
         sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
         grid.Update(deltaTimeMs);
         tileOnMouse.Update(deltaTimeMs, mousePos);
+        map.Update(deltaTimeMs, mousePos);
 
         // DRAWING 
         window.clear(sf::Color::Black);
         grid.Draw(window);
         tileOnMouse.Draw(window);
+        map.Draw(window);
         window.display();
     }
     return 0;

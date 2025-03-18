@@ -11,6 +11,8 @@ private:
 	sf::Texture texture;
 	sf::RectangleShape bondsRect;
 	float speed;
+	int textureIndexX;
+	int textureIndexY;
 	
 	// bullets 
 	sf::Vector2f mousePos;
