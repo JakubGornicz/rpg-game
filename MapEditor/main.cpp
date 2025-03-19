@@ -28,7 +28,7 @@ int main()
     TileOnMouse tileOnMouse(sf::Vector2i(16, 16), // size
                             sf::Vector2f(5, 5), // scale 
                             sf::Vector2f(0, 0)); // position offset 
-    Map map(tileOnMouse);
+    Map map(grid, tileOnMouse);
 
     sf::Text fpsCounter;
     sf::Font textFont;
@@ -65,7 +65,7 @@ int main()
 
         if (fpsClock.getElapsedTime().asSeconds() >= 1.0f)
         {
-            int fps = (1000.0f / deltaTimeMs);
+            int fps = static_cast<int>(1000.0f / deltaTimeMs);
             fpsCounter.setString("FPS: " + std::to_string(fps));
             fpsClock.restart();
         }
@@ -90,8 +90,8 @@ int main()
         // DRAWING 
         window.clear(sf::Color::Black);
         grid.Draw(window);
-        tileOnMouse.Draw(window);
         map.Draw(window);
+        tileOnMouse.Draw(window);
         window.display();
     }
     return 0;

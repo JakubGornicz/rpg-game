@@ -15,9 +15,14 @@ private:
 	sf::Vector2f m_offset;
 
 	bool m_isMouseOnGrid;
+	int nextTileX;
+	int nextTileY;
 
 public:
-	TileOnMouse(const sf::Vector2i& tileSize, const sf::Vector2f& tileScale, const sf::Vector2f& offset);
+	TileOnMouse(
+		const sf::Vector2i& tileSize,
+		const sf::Vector2f& tileScale,
+		const sf::Vector2f& offset);
 	~TileOnMouse();
 
 	void Initialize();
@@ -28,7 +33,14 @@ public:
 	/// <summary>
 	/// Checks if the mouse was clicked on a tile or not and what is the position of the clicked tile.
 	/// </summary>
-	/// <param name="tilePosition">OUT - returns the tile position of the tile clicked by the mouse.</param>
+	/// <param name="tilePosition">OUT DATA - returns the tile position of the tile clicked by the mouse.</param>
+	/// <param name="tileGridPosition"></param>
+	/// <param name="mousePosition"></param>
 	/// <returns>Returns a boolean depending on if the mouse was clicked on tile.</returns>
-	bool IsMouseClickedOnTile(sf::Vector2f &tilePosition, const sf::Vector2f& mousePosition) const;
+	bool IsMouseClickedOnTile(
+		sf::Vector2f& tilePosition,
+		sf::Vector2i& tileGridPosition,
+		const sf::Vector2f& mousePosition) const;
+
+	inline const sf::Sprite& GetSprite() const { return m_tile; }
 };
